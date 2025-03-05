@@ -1,36 +1,52 @@
 import numpy as np
 import pandas as pd
 import random
-Gender = ["Male","Female"]
+
+Gender = ["Male", "Female"]
+
 def generate_gender():
     return random.choice(Gender)
-def create_worker(Worker_id, Name,Department, Salary, Gender,Employee_Level):
-    return{
-        "Worker_id":Worker_id,
-        "Name":Name,
-        "Department":Department,
-        "Salary":Salary,
-        "Gender":Gender,
-        "Employee_Level":Employee_Level
+
+def create_worker(Worker_id, Name, Department, Salary, Gender, Employee_Level):
+    return {
+        "Worker_id": Worker_id,
+        "Name": Name,
+        "Department": Department,
+        "Salary": Salary,
+        "Gender": Gender,
+        "Employee_Level": Employee_Level
     }
-workers=[]
-for i in range(450):
-    worker=create_worker(
-    Worker_id=i+1,
-    Name= f"worker{i+1}",
-    Department=f"Department{i%5+1}",
-    Salary=3000+(i*100),
-    Gender=generate_gender(),
-    Employee_Level="0"
-    )
-    workers.append(worker)
 
-print(workers[0])
+workers = []
+try:
+    for i in range(450):
+        try:
+            worker = create_worker(
+                Worker_id=i + 1,
+                Name=f"worker{i + 1}",
+                Department=f"Department{i % 5 + 1}",
+                Salary=3000 + (i * 100),
+                Gender=generate_gender(),
+                Employee_Level="0"
+            )
+            workers.append(worker)
+        except Exception as inner_e:
+            print(f"Error creating worker {i + 1}: {inner_e}")
 
-print(f"Total Workers: {len(workers)}")
-for worker in workers:
-    if worker["Salary"] in range(10000,20001):
-        worker["Employee_Level"] ="A5"
-    elif worker["Salary"] in range(7500,30001) and worker["Gender"]=="Female":
-        worker["Employee_Level"]="A5-F"
-    print(worker)
+    print(workers[0])
+    print(f"Total Workers: {len(workers)}")
+
+    for worker in workers:
+        try:
+            salary = worker["Salary"]
+            gender = worker["Gender"]
+            if 10000 <= salary <= 20000:
+                worker["Employee_Level"] = "A5"
+            elif 7500 <= salary <= 30000 and gender == "Female":
+                worker["Employee_Level"] = "A5-F"
+            print(worker)
+        except (KeyError, TypeError) as loop_e:
+            print(f"Error processing worker {worker.get('Worker_id', 'Unknown')}: {loop_e}")
+
+except Exception as outer_e:
+    print(f"An unexpected error occurred: {outer_e}")
